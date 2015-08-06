@@ -1,0 +1,6 @@
+
+# build file
+js/
+
+# library
+node_modules/
