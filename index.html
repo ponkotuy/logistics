@@ -8,11 +8,16 @@
     <script src="https://code.createjs.com/easeljs-0.8.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.min.js"></script>
+    <script src="js/city.js"></script>
+    <script src="js/line.js"></script>
+    <script src="js/mode.js"></script>
     <script src="js/main.js"></script>
   </head>
   <body onload="init();">
     <button type="button" id="line" class="btn btn-default active">Line</button>
     <button type="button" id="army" class="btn btn-default">Army</button>
+    <textarea id="log" rows="5" cols="80" readonly="readonly"></textarea>
     <canvas id="logistics" width="640" height="480"></canvas>
   </body>
 </html>
