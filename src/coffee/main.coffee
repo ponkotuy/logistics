@@ -12,7 +12,7 @@ log = (mes) ->
   text = logElem.val() + '\n' + mes
   logElem.val(text)
 
-class Board
+class @Board
   constructor: ->
     @mode = new Mode('line')
     @stage = new createjs.Stage('logistics')
@@ -38,9 +38,7 @@ class Board
       if @selected?
         @selected.select(false)
         if to?
-          line = new Line(@selected, to)
-          @lines.push(line)
-          @refreshView()
+          @mode.dragAndDrop()(@, @selected, to)
         @stage.update()
 
   refreshView: ->

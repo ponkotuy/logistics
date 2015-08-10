@@ -1,4 +1,13 @@
 
+modes =
+  line:
+    dragAndDrop: (board, from, to) ->
+      line = new Line(from, to)
+      board.lines.push(line)
+      board.refreshView()
+  army:
+    dragAndDrop: (board, from, to) -> null
+
 class @Mode
   Selects: ['line', 'army']
 
@@ -14,3 +23,6 @@ class @Mode
         $('#' + s).addClass('active')
       else
         $('#' + s).removeClass('active')
+
+  dragAndDrop: ->
+    modes[@select].dragAndDrop
