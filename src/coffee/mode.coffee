@@ -2,14 +2,13 @@
 modes =
   line:
     dragAndDrop: (board, from, to) ->
-      line = new Line(from, to)
-      board.lines.push(line)
+      board.addLine(new Line(from, to))
       board.refreshView()
   army:
     dragAndDrop: (board, from, to) -> null
 
 class @Mode
-  Selects: ['line', 'army']
+  Selects: Object.keys(modes)
 
   constructor: (@select) ->
     @Selects.forEach (sel) =>

@@ -22,10 +22,9 @@ class @Board
       new City(150, 50, 3)
     ]
     @lines = [new Line(@cities[0], @cities[1])]
+    @selected = null
     @setMouseEvent()
     @refreshView()
-    @selected = null
-    @stage.update()
 
   setMouseEvent: ->
     @stage.on 'stagemousedown', (m) =>
@@ -37,12 +36,21 @@ class @Board
       to = nearlyCities(@cities, m.stageX, m.stageY)
       if @selected?
         @selected.select(false)
+        @stage.update()
         if to?
           @mode.dragAndDrop()(@, @selected, to)
-        @stage.update()
 
   refreshView: ->
     @stage.clear()
     @lines.forEach (line) => @stage.addChild(line.shape())
     @cities.forEach (city) =>
       @stage.addChild(city.container)
+    @stage.update()
+
+  addLine: (line) ->
+    if line.start == line.end then return
+    lines = _.filter @lines, (l) ->
+      !((l.start == line.start && l.end == line.end) ||
+        (l.start == line.end && l.end == line.start))
+    lines.push(line)
+    @lines = lines
