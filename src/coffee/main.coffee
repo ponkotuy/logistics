@@ -19,7 +19,8 @@ class @Board
     @cities = [
       new City(100, 100, 5),
       new City(50, 100, 3),
-      new City(150, 50, 3)
+      new City(150, 50, 3),
+      new City(50, 50, 2)
     ]
     @lines = [new Line(@cities[0], @cities[1])]
     @selected = null
