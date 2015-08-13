@@ -1,7 +1,8 @@
 
 class @City
   constructor: (@x, @y, @area) ->
-    @popular = City.PopularMax[@area] / 10
+    @pMax = City.PopularMax[@area]
+    @popular = @pMax / 10
     @container = @createContainer()
     @selector = null
 

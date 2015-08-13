@@ -2,6 +2,7 @@
 class @Line
   constructor: (@start, @end) ->
     @scale = 1
+    @length = @start.diff(@end.x, @end.y)
 
   shape: () ->
     s = new createjs.Shape()
