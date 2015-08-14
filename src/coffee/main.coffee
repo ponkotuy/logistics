@@ -16,13 +16,8 @@ class @Board
   constructor: ->
     @mode = new Mode('line')
     @stage = new createjs.Stage('logistics')
-    @cities = [
-      new City(100, 100, 5),
-      new City(50, 100, 3),
-      new City(150, 50, 3),
-      new City(50, 50, 2)
-    ]
-    @lines = [new Line(@cities[0], @cities[1])]
+    @cities = createMap(1)
+    @lines = []
     @selected = null
     @setMouseEvent()
     @refreshView()
@@ -33,17 +28,17 @@ class @Board
       @selected = nearlyCities(@cities, m.stageX, m.stageY)
       if @selected?
         @selected.select(true)
-        @stage.update()
+        @refreshView()
     @stage.on 'stagemouseup', (m) =>
       to = nearlyCities(@cities, m.stageX, m.stageY)
       if @selected?
         @selected.select(false)
-        @stage.update()
+        @refreshView()
         if to?
           @mode.dragAndDrop()(@, @selected, to)
 
   refreshView: ->
-    @stage.clear()
+    @stage.removeAllChildren()
     @lines.forEach (line) => @stage.addChild(line.shape())
     @cities.forEach (city) =>
       @stage.addChild(city.container)
@@ -86,16 +81,16 @@ class @Board
   refreshPopulation: =>
     @cities.forEach (city) =>
       shorts = @dijekstra(city)
-      console.log(shorts)
       effect = 0
       for n in [0..@cities.length]
         if @cities[n]? and shorts[n]?
           effect += @cities[n].popular / shorts[n]
       rate = city.pMax * 2 - city.popular
       goal = Math.sqrt(effect) * rate / 5
-      gain = if goal < city.popular then 0 else (goal - city.popular) / 100
-      console.log(gain)
+      gain = if goal < city.popular then 0 else (goal - city.popular) / 10
       city.popular += gain
+      city.refresh()
+    @refreshView()
 
 findMinIndex = (xs) ->
   min = Infinity
