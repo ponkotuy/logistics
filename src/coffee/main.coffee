@@ -18,10 +18,10 @@ class @Board
     @stage = new createjs.Stage('logistics')
     @cities = createMap(1)
     @lines = []
+    @money = new Money('money', 100)
     @selected = null
     @setMouseEvent()
-    @refreshView()
-    @population = window.setInterval(@refreshPopulation, 1000)
+    @population = window.setInterval(@refresh, 1000)
 
   setMouseEvent: ->
     @stage.on 'stagemousedown', (m) =>
@@ -42,6 +42,7 @@ class @Board
     @lines.forEach (line) => @stage.addChild(line.shape())
     @cities.forEach (city) =>
       @stage.addChild(city.container)
+    @money.refreshView()
     @stage.update()
 
   addLine: (line) ->
@@ -78,7 +79,7 @@ class @Board
       f(res.key, res.val)
     f(city, 0)
 
-  refreshPopulation: =>
+  refreshPopulation: ->
     @cities.forEach (city) =>
       shorts = @dijekstra(city)
       effect = 0
@@ -90,6 +91,11 @@ class @Board
       gain = if goal < city.popular then 0 else (goal - city.popular) / 10
       city.popular += gain
       city.refresh()
+
+  refreshMoney: ->
+
+  refresh: =>
+    @refreshPopulation()
     @refreshView()
 
 findMinIndex = (xs) ->
