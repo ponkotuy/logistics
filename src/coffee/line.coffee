@@ -4,7 +4,7 @@ class @Line
     @scale = 1
     @length = @start.diff(@end.x, @end.y)
 
-  shape: () ->
+  shape: ->
     s = new createjs.Shape()
     s.graphics.setStrokeStyle(2)
     s.graphics.beginStroke('black')
@@ -12,3 +12,6 @@ class @Line
     s.graphics.lineTo(@end.x, @end.y)
     s.graphics.endStroke()
     s
+
+  buildCost: ->
+    @length
