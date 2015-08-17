@@ -13,6 +13,7 @@ class Random
   random = new Random(seed)
   missCount = 0
   cities = [new City(320, 240, 5)]
+  cities[0].camp = true
   while missCount < 100
     city = new City(random.int(600) + 20, random.int(440) + 20, random.int(4) + 1)
     x = city.x

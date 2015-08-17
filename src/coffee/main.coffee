@@ -47,10 +47,13 @@ class @Board
 
   addLine: (line) ->
     if line.start == line.end then return
+    if !line.start.camp and !line.end.camp then return
     lines = _.filter @lines, (l) ->
       !((l.start == line.start and l.end == line.end) or
         (l.start == line.end and l.end == line.start))
     lines.push(line)
+    line.start.camp = true
+    line.end.camp = true
     @lines = lines
 
   dijekstra: (city) ->

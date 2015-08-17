@@ -4,6 +4,7 @@ class @City
     @pMax = City.PopularMax[@area]
     @popular = @pMax / 10
     @selected = false
+    @camp = false
     @refresh()
 
   createContainer: () ->
@@ -17,7 +18,8 @@ class @City
 
   circle: ->
     s = new createjs.Shape()
-    s.graphics.beginFill('red').drawCircle(0, 0, City.Sizes[@area])
+    color = if @camp then 'red' else 'gray'
+    s.graphics.beginFill(color).drawCircle(0, 0, City.Sizes[@area])
     s
 
   popularText: ->
