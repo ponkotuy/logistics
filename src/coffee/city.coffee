@@ -4,7 +4,7 @@ class @City
     @pMax = City.PopularMax[@area]
     @popular = @pMax / 10
     @selected = false
-    @camp = false
+    @camp = Player.Neutral
     @refresh()
 
   createContainer: () ->
@@ -18,7 +18,7 @@ class @City
 
   circle: ->
     s = new createjs.Shape()
-    color = if @camp then 'red' else 'gray'
+    color = @camp.color
     s.graphics.beginFill(color).drawCircle(0, 0, City.Sizes[@area])
     s
 

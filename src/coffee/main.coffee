@@ -15,9 +15,9 @@ log = (mes) ->
 
 class @Board
   constructor: ->
-    @mode = new Mode('line')
     @stage = new createjs.Stage('logistics')
-    @cities = createMap(1)
+    @players = [new Player('red', true)]
+    @cities = createMap(Math.random(), @players)
     @lines = []
     @money = new Money('money', 100)
     @selected = null
@@ -34,9 +34,8 @@ class @Board
       to = nearlyCities(@cities, m.stageX, m.stageY)
       if @selected?
         @selected.select(false)
+        if to? then @addLine(new Line(@selected, to))
         @refreshView()
-        if to?
-          @mode.dragAndDrop()(@, @selected, to)
 
   refreshView: ->
     @stage.removeAllChildren()
@@ -50,7 +49,7 @@ class @Board
     if line.start == line.end
       log('始点と終点が同じです')
       return
-    if !line.start.camp and !line.end.camp
+    if !line.start.camp.isMine and !line.end.camp.isMine
       log('味方の都市が含まれていません')
       return
     if @money.money < line.buildCost()
@@ -61,8 +60,6 @@ class @Board
       !((l.start == line.start and l.end == line.end) or
         (l.start == line.end and l.end == line.start))
     lines.push(line)
-    line.start.camp = true
-    line.end.camp = true
     @money.money -= line.buildCost()
     @lines = lines
 
@@ -95,18 +92,29 @@ class @Board
   refreshPopulation: ->
     @cities.forEach (city) =>
       shorts = @dijekstra(city)
-      effect = 0
+      effects = [0]
       for n in [0..@cities.length]
         if @cities[n]? and shorts[n]?
-          effect += @cities[n].popular / shorts[n]
-      rate = city.pMax * 2 - city.popular
-      goal = Math.sqrt(effect) * rate / 5
-      gain = if goal < city.popular then 0 else (goal - city.popular) / 10
+          if @cities[n].camp == Player.Neutral then continue
+          x = @cities[n].popular / shorts[n]
+          effects[@cities[n].camp.id] ?= 0
+          effects[@cities[n].camp.id] += x
+      effects[city.camp.id] ?= 0
+      effects[city.camp.id] += 0.0625
+      effect = _.sum((if city.camp.id == i then e else -e) for e, i in effects)
+      rate = city.pMax * 2.1 - city.popular
+      goal = Math.sign(effect) * Math.sqrt(Math.abs(effect)) * rate / 5
+      gain = (goal - city.popular) / 10
       city.popular += gain
+      if city.popular < 1
+        city.popular = 1
+        effects[Player.Neutral.id] = 0
+        newCamp = maxIndex(effects)
+        city.camp = _.find @players, (p) -> p.id == newCamp
       city.refresh()
 
   refreshMoney: ->
-    homes = _.filter @cities, (c) -> c.camp
+    homes = _.filter @cities, (city) -> city.camp.isMine
     p = _.sum homes, (c) -> c.popular
     @money.money += p / 10
 
@@ -123,3 +131,12 @@ findMinIndex = (xs) ->
       index = n
       min = xs[n]
   index
+
+maxIndex = (xs) ->
+  idx = -1
+  val = -Infinity
+  xs.forEach (x, i) ->
+    if val < x
+      idx = i
+      val = x
+  idx
