@@ -7,10 +7,11 @@ nearlyCities = (cities, x, y) ->
   result = _.min targets, (c) -> c.diff(x, y)
   if _.isNumber(result) then null else result # targetsが空だとInfinityが返ってくるので
 
-logElem = $('#log')
 log = (mes) ->
-  text = logElem.val() + '\n' + mes
-  logElem.val(text)
+  before = $('#log').val()
+  text = (if before then before + '\n' else '') + mes
+  $('#log').val(text)
+  console.log(mes)
 
 class @Board
   constructor: ->
@@ -46,9 +47,15 @@ class @Board
     @stage.update()
 
   addLine: (line) ->
-    if line.start == line.end then return
-    if !line.start.camp and !line.end.camp then return
-    if @money.money < line.buildCost()  then return
+    if line.start == line.end
+      log('始点と終点が同じです')
+      return
+    if !line.start.camp and !line.end.camp
+      log('味方の都市が含まれていません')
+      return
+    if @money.money < line.buildCost()
+      log('資金が不足しています')
+      return
 
     lines = _.filter @lines, (l) ->
       !((l.start == line.start and l.end == line.end) or

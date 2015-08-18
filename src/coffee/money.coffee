@@ -4,4 +4,4 @@ class @Money
     @input = $('#' + id)
 
   refreshView: ->
-    @input.val(@money.toFixed(0))
+    @input.html("<strong>#{@money.toFixed(0)}</strong>")
