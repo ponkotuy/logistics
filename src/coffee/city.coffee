@@ -23,7 +23,7 @@ class @City
     s
 
   popularText: ->
-    new createjs.Text(@popular.toFixed(0), '20px Arial', 'black')
+    new createjs.Text(@popular.toFixed(0), '18px Arial', 'black')
 
   diff: (x, y) ->
     diff(@x, @y, x, y)

@@ -6,7 +6,7 @@ class @Line
 
   shape: ->
     s = new createjs.Shape()
-    s.graphics.setStrokeStyle(2)
+    s.graphics.setStrokeStyle(@scale)
     s.graphics.beginStroke('black')
     s.graphics.moveTo(@start.x, @start.y)
     s.graphics.lineTo(@end.x, @end.y)
@@ -15,3 +15,12 @@ class @Line
 
   buildCost: ->
     @length
+
+  upgradeCost: ->
+    @length * (@scale + 1)
+
+  upgrade: ->
+    @scale += 1
+
+  transitCost: ->
+    @length / @scale

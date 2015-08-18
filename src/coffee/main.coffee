@@ -7,12 +7,6 @@ nearlyCities = (cities, x, y) ->
   result = _.min targets, (c) -> c.diff(x, y)
   if _.isNumber(result) then null else result # targetsが空だとInfinityが返ってくるので
 
-log = (mes) ->
-  before = $('#log').val()
-  text = (if before then before + '\n' else '') + mes
-  $('#log').val(text)
-  console.log(mes)
-
 class @Board
   constructor: ->
     @stage = new createjs.Stage('logistics')
@@ -52,16 +46,17 @@ class @Board
     if !line.start.camp.isMine and !line.end.camp.isMine
       log('味方の都市が含まれていません')
       return
-    if @money.money < line.buildCost()
-      log('資金が不足しています')
-      return
+    dup = (_.filter @lines, (l) ->
+      ((l.start == line.start and l.end == line.end) or
+        (l.start == line.end and l.end == line.start)))[0]
+    if dup?
+      if @money.payment(line.upgradeCost())
+        dup.upgrade()
+    else
+      if @money.payment(line.buildCost())
+        @lines.push(line)
 
-    lines = _.filter @lines, (l) ->
-      !((l.start == line.start and l.end == line.end) or
-        (l.start == line.end and l.end == line.start))
-    lines.push(line)
-    @money.money -= line.buildCost()
-    @lines = lines
+  upgradeLine: (line) ->
 
   dijekstra: (city) ->
     costs = []
@@ -77,9 +72,9 @@ class @Board
           else
             null
         if dir?
-          newLength = min + line.length
-          if (not temp[dir]? and newLength < temp[dir]) or not costs[dir]?
-            temp[dir] = newLength
+          newCost = min + line.transitCost()
+          if (not temp[dir]? and newCost < temp[dir]) or not costs[dir]?
+            temp[dir] = newCost
     f = (city, min) ->
       addTemp(city, min)
       if _.isEmpty(_.compact(temp)) then return costs
