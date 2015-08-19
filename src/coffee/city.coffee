@@ -1,10 +1,10 @@
 
 class @City
-  constructor: (@x, @y, @area) ->
+  constructor: (@x, @y, @area, @camp) ->
     @pMax = City.PopularMax[@area]
     @popular = @pMax / 10
     @selected = false
-    @camp = Player.Neutral
+    @camp ?= Player.Neutral
     @refresh()
 
   createContainer: () ->

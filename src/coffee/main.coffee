@@ -1,6 +1,6 @@
 
 @init = ->
-  board = new Board()
+  board = new Board({x: 640, y: 480})
 
 nearlyCities = (cities, x, y) ->
   targets = _.filter cities, (c) -> c.diff(x, y) <= 15
@@ -8,10 +8,10 @@ nearlyCities = (cities, x, y) ->
   if _.isNumber(result) then null else result # targetsが空だとInfinityが返ってくるので
 
 class @Board
-  constructor: ->
+  constructor: (size) ->
     @stage = new createjs.Stage('logistics')
-    @players = [new Player('red', true)]
-    @cities = createMap(Math.random(), @players)
+    @players = [new Player('red', true), new Player('green', false)]
+    @cities = createMap(null, @players, size)
     @lines = []
     @money = new Money('money', 100)
     @selected = null
