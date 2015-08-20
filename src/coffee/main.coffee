@@ -1,6 +1,6 @@
 
 @init = ->
-  board = new Board({x: 640, y: 480})
+  new Board({x: 640, y: 480})
 
 nearlyCities = (cities, x, y) ->
   targets = _.filter cities, (c) -> c.diff(x, y) <= 15
@@ -11,6 +11,7 @@ class @Board
   constructor: (size) ->
     @stage = new createjs.Stage('logistics')
     @players = [new Player('red', true), new Player('green', false)]
+    @ais = [new AI(new Money('', 100), @players[1])]
     @cities = createMap(null, @players, size)
     @lines = []
     @money = new Money('money', 100)
@@ -55,8 +56,6 @@ class @Board
     else
       if @money.payment(line.buildCost())
         @lines.push(line)
-
-  upgradeLine: (line) ->
 
   dijekstra: (city) ->
     costs = []
@@ -113,10 +112,18 @@ class @Board
     p = _.sum homes, (c) -> c.popular
     @money.money += p / 10
 
+  refreshAI: ->
+    @ais.forEach (ai) =>
+      action = ai.run(@cities, @lines)
+      if action?
+        AIAction[action.type](@, ai, action)
+    @ais.forEach (ai) => ai.refreshMoney(@cities)
+
   refresh: =>
     @refreshPopulation()
     @refreshMoney()
     @refreshView()
+    @refreshAI()
 
 findMinIndex = (xs) ->
   min = Infinity
@@ -135,3 +142,11 @@ maxIndex = (xs) ->
       idx = i
       val = x
   idx
+
+AIAction =
+  createLine: (board, ai, obj) ->
+    if ai.money.payment(obj.line.buildCost())
+      board.lines.push(obj.line)
+  upgradeLine: (board, ai, obj) ->
+    if ai.money.payment(obj.line.upgradeCost())
+      obj.line.upgrade()
