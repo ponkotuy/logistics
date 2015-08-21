@@ -20,11 +20,93 @@
   </head>
   <body onload="init();">
     <div class="container" style="margin-top: 30px">
-      <dl class="dl-horizontal">
-        <dt>所持金</dt><dd id="money"></dd>
-      </dl>
-      <canvas id="logistics" width="640" height="480"></canvas>
-      <textarea id="log" rows="5" cols="80" readonly="readonly"></textarea>
+      <ul class="nav nav-tabs" role="tablist" id="tab" style="margin-bottom: 20px">
+        <li role="presentation" class="active">
+          <a href="#title" aria-controls="title" role="tab" data-toggle="tab">Title</a>
+        </li>
+        <li role="presentation">
+          <a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">CreateGame</a>
+        </li>
+        <li role="presentation">
+          <a href="#board" aria-controls="board" role="tab" data-toggle="tab">GameStart</a>
+        </li>
+      </ul>
+
+      <div class="tab-content">
+        <div role="tabpanel" class="tab-pane fade" id="title">
+          <h1>Logistics</h1>
+        </div>
+
+        <div role="tabpanel" class="tab-pane fade active" id="settings">
+          <dl class="dl-horizontal">
+            <dt>マップサイズ</dt>
+            <dd>
+              <label class="radio-inline">
+                <input type="radio" name="map" id="map-640" value="640" checked="checked">640x480
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="map" id="map-800" value="800">800x600
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="map" id="map-1024" value="1024">1024x768
+              </label>
+            </dd>
+
+            <dt>AIの数</dt>
+            <dd>
+              <label class="radio-inline">
+                <input type="radio" name="ais" id="ai0" value="0">0
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="ais" id="ai1" value="1" checked="checked">1
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="ais" id="ai2" value="2">2
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="ais" id="ai3" value="3">3
+              </label>
+            </dd>
+
+            <dt>都市の密度</dt>
+            <dd>
+              <label class="radio-inline">
+                <input type="radio" name="density" id="slack" value="65">疎
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="density" id="normal-density" value="50" checked="checked">普通
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="density" id="tight" value="40">密
+              </label>
+            </dd>
+
+            <dt>都市規模</dt>
+            <dd>
+              <label class="radio-inline">
+                <input type="radio" name="city-size" id="small" value="small">小
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="city-size" id="normal-city" value="normal" checked="checked">中
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="city-size" id="large" value="large">大
+              </label>
+            </dd>
+          </dl>
+
+          <button type="button" class="btn btn-primary">GameStart!</button>
+          <button type="button" class="btn btn-default">初期化</button>
+        </div>
+
+        <div role="tabpanel" class="tab-pane fade" id="board">
+          <dl class="dl-horizontal">
+            <dt>所持金</dt><dd id="money"></dd>
+          </dl>
+          <canvas id="logistics" width="640" height="480"></canvas>
+          <textarea id="log" rows="5" cols="80" readonly="readonly"></textarea>
+        </div>
+      </div>
     </div>
   </body>
 </html>

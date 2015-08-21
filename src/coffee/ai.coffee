@@ -48,6 +48,5 @@ class @AI
 
   refreshMoney: (cities) ->
     homes = _.filter cities, (city) => city.camp == @player
-    console.log(homes, cities)
     p = _.sum homes, (city) -> city.popular
     @money.money += p / 10
