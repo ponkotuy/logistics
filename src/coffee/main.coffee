@@ -10,7 +10,6 @@ nearlyCities = (cities, x, y) ->
 class @Board
   constructor: (size) ->
     @stage = new createjs.Stage('logistics')
-    @players = [new Player('red', true), new Player('green', false)]
     @ais = [new AI(new Money('', 100), @players[1])]
     @cities = createMap(null, @players, size)
     @lines = []

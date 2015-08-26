@@ -17,6 +17,28 @@ class Random
   int: (n) ->
     Math.floor(Math.random() * n)
 
+Players = [
+  new Player('red', true),
+  new Player('green', false),
+  new Player('yellow', false),
+  new Player('blue', false)
+]
+
+CitySize =
+  small: [1, 1, 2, 2, 2, 3, 3, 4]
+  normal: [1, 2, 3, 4]
+  large: [1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 5]
+
+readSettings = ->
+  map = getCheckVal('map')
+  ais = parseint(getCheckVal('ais'))
+  density = getCheckVal('density')
+  citySize = getCheckVal('city-size')
+  {seed: null, players: _.slice(Players, 0, ais + 1), citySize: CitySize[citySize], size: }
+
+getCheckVal = (name) ->
+  $("""input[name="#{name}"]:checked""").val()
+
 
 # size = {x: hoge, y: fuga}
 @createMap = (seed, players, size) ->
