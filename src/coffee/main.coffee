@@ -120,10 +120,8 @@ class @Board
         newCamp = maxIndex(effects)
         @lines = _.filter @lines, (line) ->
           if line.start == city
-            console.log(line.end.camp, newCamp)
             line.end.camp.id == newCamp
           else if line.end == city
-            console.log(line.start.camp, newCamp)
             line.start.camp.id == newCamp
           else
             true
