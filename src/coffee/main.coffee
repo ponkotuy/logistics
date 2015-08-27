@@ -118,6 +118,15 @@ class @Board
         city.popular = 1
         effects[Player.Neutral.id] = 0
         newCamp = maxIndex(effects)
+        @lines = _.filter @lines, (line) ->
+          if line.start == city
+            console.log(line.end.camp, newCamp)
+            line.end.camp.id == newCamp
+          else if line.end == city
+            console.log(line.start.camp, newCamp)
+            line.start.camp.id == newCamp
+          else
+            true
         city.camp = _.find @players, (p) -> p.id == newCamp
       city.refresh()
 
