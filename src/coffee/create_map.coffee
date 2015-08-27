@@ -29,27 +29,35 @@ CitySize =
   normal: [1, 2, 3, 4]
   large: [1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 5]
 
-readSettings = ->
-  map = getCheckVal('map')
-  ais = parseint(getCheckVal('ais'))
-  density = getCheckVal('density')
+@readSettings = ->
+  map = parseInt(getCheckVal('map'))
+  ais = parseInt(getCheckVal('ais'))
+  density = parseInt(getCheckVal('density'))
   citySize = getCheckVal('city-size')
-  {seed: null, players: _.slice(Players, 0, ais + 1), citySize: CitySize[citySize], size: }
+  {
+    players: _.slice(Players, 0, ais + 1),
+    citySize: CitySize[citySize],
+    size: {x: map, y: map*0.75}
+    density: density
+  }
 
 getCheckVal = (name) ->
   $("""input[name="#{name}"]:checked""").val()
 
 
-# size = {x: hoge, y: fuga}
-@createMap = (seed, players, size) ->
+# seed: Int
+# settings: {players: [Player], citySize: [Int], size: {x: Int, y: Int}, density: Int}
+@createMap = (seed, settings) ->
   random = if seed? then new SeedRandom(seed) else new Random()
   missCount = 0
-  cities = createPlayerCities(players, size)
+  size = settings.size
+  cities = createPlayerCities(settings.players, size)
   while missCount < 100
     x = random.int(size.x - 40) + 20
     y = random.int(size.y - 40) + 20
-    city = new City(x, y, random.int(4) + 1)
-    if _.all(50 <= c.diff(x, y) for c in cities)
+    citySize = settings.citySize[random.int(settings.citySize.length)]
+    city = new City(x, y, citySize)
+    if _.all(settings.density <= c.diff(x, y) for c in cities)
       cities.push(city)
     else
       missCount++

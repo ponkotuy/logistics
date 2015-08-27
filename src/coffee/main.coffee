@@ -1,6 +1,18 @@
 
+board = null
+
 @init = ->
-  new Board({x: 640, y: 480})
+  $('#start_btn').click -> $('#tab a[href="#board"]').tab('show')
+  $('#tab a[href="#board"]').on 'show.bs.tab', -> start()
+  $('#tab a[href="#board"]').on 'hide.bs.tab', ->
+    board.clear()
+    logClear()
+
+start = ->
+  settings = readSettings()
+  $('#logistics').attr('width', settings.size.x)
+  $('#logistics').attr('height', settings.size.y)
+  board = new Board(settings)
 
 nearlyCities = (cities, x, y) ->
   targets = _.filter cities, (c) -> c.diff(x, y) <= 15
@@ -8,15 +20,19 @@ nearlyCities = (cities, x, y) ->
   if _.isNumber(result) then null else result # targetsが空だとInfinityが返ってくるので
 
 class @Board
-  constructor: (size) ->
+  constructor: (settings) ->
     @stage = new createjs.Stage('logistics')
-    @ais = [new AI(new Money('', 100), @players[1])]
-    @cities = createMap(null, @players, size)
+    @players = settings.players
+    @ais = _.rest(@players).map (color) -> new AI(new Money('', 100), color)
+    @cities = createMap(null, settings)
     @lines = []
     @money = new Money('money', 100)
     @selected = null
     @setMouseEvent()
-    @population = window.setInterval(@refresh, 1000)
+    @refreshEvent = window.setInterval(@refresh, 1000)
+
+  clear: ->
+    window.clearInterval(@refreshEvent)
 
   setMouseEvent: ->
     @stage.on 'stagemousedown', (m) =>
@@ -34,8 +50,7 @@ class @Board
   refreshView: ->
     @stage.removeAllChildren()
     @lines.forEach (line) => @stage.addChild(line.shape())
-    @cities.forEach (city) =>
-      @stage.addChild(city.container)
+    @cities.forEach (city) => @stage.addChild(city.container)
     @money.refreshView()
     @stage.update()
 
